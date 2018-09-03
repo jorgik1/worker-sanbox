@@ -14,13 +14,11 @@
 
 <div id="chart-ring-year"></div>
 <div id="chart-row-spenders"></div>
-<div id="bar-chart"></div>
 
 <script type="text/javascript">
 
 
   let yearRingChart = dc.pieChart("#chart-ring-year"),
-      testChart = dc.pieChart('#bar-chart'),
       spenderRowChart = dc.rowChart("#chart-row-spenders");
 
   const connection = new WebSocket('ws://0.0.0.0:2346/socket-data');
@@ -65,10 +63,6 @@
         .dimension(nameDim)
         .group(spendPerName)
         .elasticX(true);
-    testChart.
-            width(768).height(480)
-        .dimension(spendDim)
-        .group(spendPerName);
 
     dc.renderAll();
   }

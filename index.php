@@ -20,7 +20,8 @@ class Fixtures
      */
     public function getFixturesData(): string
     {
-        #create a bunch of random data for various dimensions we want
+        // Create a bunch of random data for various dimensions we want.
+
         $qty = random_int(1, 4);
         $total = random_int(30, 1000);
         $tip = random_int(10, 100);
@@ -29,7 +30,7 @@ class Fixtures
         $spent = random_int(1, 150);
         $year = random_int(2012, 2016);
 
-        #create a new data point
+        // Create a new data array.
         $point_data = [
           'quantity' => $qty,
           'total' => $total,
@@ -41,9 +42,8 @@ class Fixtures
           'x' => time(),
         ];
 
-        #write the json object to the socket
+        // This wil write the json object to the socket
         return json_encode($point_data);
-        #create new ioloop instance to intermittently publish data
     }
 
 }
@@ -57,10 +57,12 @@ class Fixtures
     // Emitted when new connection come
     $ws_worker->onConnect = function ($connection) use ($data) {
         // 2.5 seconds
-        $time_interval = 3.5;
+        $time_interval = 2.5;
         Timer::add($time_interval,
           function () use ($connection, $data) {
+            // Just print data for terminal.
             echo $data->getFixturesData();
+            // Sending data to Websocket chanel.
             $connection->send($data->getFixturesData());
           }
         );
