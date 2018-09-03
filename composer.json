@@ -1,0 +1,15 @@
+{
+    "name": "yuriy/reactphp-sanbox",
+    "authors": [
+        {
+            "name": "Yuriy Stenin",
+            "email": "yuriy.s@team.anyforsoft.com"
+        }
+    ],
+    "require": {
+        "react/event-loop": "^1.0",
+        "react/socket": "^0.8.5",
+        "clue/buzz-react" : "^2.3",
+        "workerman/workerman": "^3.5"
+    }
+}
