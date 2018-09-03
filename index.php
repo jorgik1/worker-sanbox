@@ -11,21 +11,23 @@ class Fixtures
 
     public $paymentTypes = ['cash', 'tab', 'visa', 'mastercard', 'bitcoin'];
 
-    public $namesArray = ['Ben', 'Jarrod', 'Vijay', 'Aziz'];
+    public $namesArray = ['Ben', 'Jarrod', 'Vijay', 'Aziz', 'Jack'];
 
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function getFixturesData(): string
     {
         #create a bunch of random data for various dimensions we want
-        $qty = range(1, 4);
-        $total = range(30, 1000);
-        $tip = range(10, 100);
-        $payment_value = range(0, 4);
-        $payType = $this->paymentTypes[array_shift($payment_value)];
-        $name_value = range(0, 4);
-        $name = $this->namesArray[array_shift($name_value)];
-        $spent = range(1, 150);
-        $year = range(2012, 2016);
+        $qty = random_int(1, 4);
+        $total = random_int(30, 1000);
+        $tip = random_int(10, 100);
+        $payType = $this->paymentTypes[random_int(0, 4)];
+        $name = $this->namesArray[random_int(0, 4)];
+        $spent = random_int(1, 150);
+        $year = random_int(2012, 2016);
 
         #create a new data point
         $point_data = [
@@ -48,7 +50,7 @@ class Fixtures
 
 {
     // Create a Websocket server
-    $ws_worker = new Worker('websocket://0.0.0.0:2346');
+    $ws_worker = new Worker('websocket://0.0.0.0:2346/socket-data');
     // 4 processes
     $ws_worker->count = 4;
     $data = new Fixtures();
@@ -58,6 +60,7 @@ class Fixtures
         $time_interval = 3.5;
         Timer::add($time_interval,
           function () use ($connection, $data) {
+            echo $data->getFixturesData();
             $connection->send($data->getFixturesData());
           }
         );

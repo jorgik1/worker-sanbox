@@ -4,27 +4,36 @@
     <meta charset="utf-8">
     <title>Dimensional Charting</title>
 
-    <link rel="stylesheet" type="text/css" href="http://unpkg.com/dc@3/dc.css"/>
-    <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://dc-js.github.io/dc.js/css/dc.css"/>
+    <script type="text/javascript" src="http://dc-js.github.io/dc.js/js/d3.js"></script>
     <script type="text/javascript" src="http://dc-js.github.io/dc.js/js/crossfilter.js"></script>
-    <script type="text/javascript" src="http://unpkg.com/dc@3/dc.js"></script>
+    <script type="text/javascript" src="http://dc-js.github.io/dc.js/js/dc.js"></script>
 </head>
 
 <body>
 
 <div id="chart-ring-year"></div>
 <div id="chart-row-spenders"></div>
+<div id="bar-chart"></div>
 
 <script type="text/javascript">
+
+
   let yearRingChart = dc.pieChart("#chart-ring-year"),
+      testChart = dc.pieChart('#bar-chart'),
       spenderRowChart = dc.rowChart("#chart-row-spenders");
-  const connection = new WebSocket('ws://0.0.0.0:2346');
+
+  const connection = new WebSocket('ws://0.0.0.0:2346/socket-data');
+
+
   let data1 = [
     {Name: 'Ben', Spent: 330, Year: 2014, 'total': 1},
     {Name: 'Aziz', Spent: 1350, Year: 2012, 'total': 2},
     {Name: 'Vijay', Spent: 440, Year: 2014, 'total': 2},
     {Name: 'Jarrod', Spent: 555, Year: 2015, 'total': 1},
+
   ];
+
   // set crossfilter with first dataset
   let xfilter = crossfilter(data1),
       yearDim = xfilter.dimension(function (d) {
@@ -44,19 +53,23 @@
         return +d.Spent;
       });
 
-  function render_plots() {
+  function render_plots(){
     yearRingChart
-        .width(768)
-        .height(480)
+        .width(768).height(480)
         .dimension(yearDim)
         .group(spendPerYear)
         .innerRadius(50);
+
     spenderRowChart
-        .width(768)
-        .height(480)
+        .width(768).height(480)
         .dimension(nameDim)
         .group(spendPerName)
         .elasticX(true);
+    testChart.
+            width(768).height(480)
+        .dimension(spendDim)
+        .group(spendPerName);
+
     dc.renderAll();
   }
 
@@ -66,25 +79,30 @@
   function resetData(ndx, dimensions) {
     let yearChartFilters = yearRingChart.filters();
     let spenderChartFilters = spenderRowChart.filters();
+
     yearRingChart.filter(null);
     spenderRowChart.filter(null);
+
     xfilter.remove();
+
     yearRingChart.filter([yearChartFilters]);
     spenderRowChart.filter([spenderChartFilters]);
-  }
 
-  connection.onmessage = function (event) {
-    let newData = JSON.parse('[' + event.data + ']');
+  }
+  connection.onmessage = function(event) {
+    let newData = JSON.parse(event.data);
+    console.log(newData);
     let updateObject = [{
-      "Name": newData.Name,
-      "Year": newData.Year,
-      "Spent": newData.Spent,
-      "payType": newData.payType
+      'Name': newData.Name,
+      'Year': newData.Year,
+      'Spent': newData.Spent,
+      'payType': newData.payType
     }];
     //resetData(ndx, [yearDim, spendDim, nameDim]);
     xfilter.add(updateObject);
     dc.redrawAll();
   }
+
 </script>
 
 </body>
