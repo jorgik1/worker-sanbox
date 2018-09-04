@@ -24,7 +24,7 @@
   const connection = new WebSocket('ws://0.0.0.0:2346/socket-data');
 
 
-  let data1 = [
+  let static_data = [
     {Name: 'Ben', Spent: 330, Year: 2014, 'total': 1},
     {Name: 'Aziz', Spent: 1350, Year: 2012, 'total': 2},
     {Name: 'Vijay', Spent: 440, Year: 2014, 'total': 2},
@@ -33,7 +33,7 @@
   ];
 
   // set crossfilter with first dataset
-  let xfilter = crossfilter(data1),
+  let xfilter = crossfilter(static_data),
       yearDim = xfilter.dimension(function (d) {
         return +d.Year;
       }),
@@ -83,9 +83,8 @@
     spenderRowChart.filter([spenderChartFilters]);
 
   }
-  connection.onmessage = function(event) {
+  connection.onmessage = (event) => {
     let newData = JSON.parse(event.data);
-    console.log(newData);
     let updateObject = [{
       'Name': newData.Name,
       'Year': newData.Year,
