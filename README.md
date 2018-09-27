@@ -4,7 +4,7 @@ Result of this tutorial (live data charts):
 
 ![data-sharts](https://github.com/jorgik1/worker-sanbox/blob/master/gif/screen.gif)
 
-Were used an asynchronous event driven PHP framework for easily building fast, scalable network applications http://www.workerman.net
+Was using an asynchronous event-driven PHP framework for easily building fast, scalable network applications http://www.workerman.net
 
 Workerman is an asynchronous event driven PHP framework with high performance for easily building fast, scalable network applications. Supports HTTP, Websocket, SSL and other custom protocols. Supports libevent, HHVM , ReactPHP.
 
